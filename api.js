@@ -4,6 +4,7 @@ const Inert = require('inert')
 const Vision = require('vision')
 const Pack = require('./package')
 const HapiSwagger = require('hapi-swagger')
+const Good = require('good')
 
 // Create Server Object
 const server = new Hapi.Server()
@@ -51,6 +52,17 @@ server.register([
   {
     register: HapiSwagger,
     options: options
+  },
+  {
+    register: Good,
+    options: {
+      reporters: {
+        console: [
+          { module: 'good-console' },
+          'stdout'
+        ]
+      }
+    }
   }],
   function (err) {
     if (err) {
@@ -62,12 +74,12 @@ server.register([
 
 // =============== Start our Server =======================
 // Register plugins, and start the server if none of them fail
-server.register(plugins, function (err) {
+server.register(plugins, (err) => {
   if (err) { throw err }
 
-  server.start(function () {
-    console.log('Server running at:', server.info.uri)
-    console.log('Documentation available at:', server.info.uri + '/documentation')
+  server.start(() => {
+    console.log('\nServer running at:', server.info.uri)
+    console.log('Documentation available at:', server.info.uri + '/documentation\n')
   })
 })
 
